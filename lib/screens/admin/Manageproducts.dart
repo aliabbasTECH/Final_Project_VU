@@ -31,10 +31,11 @@ class _ManageProductsState extends State<ManageProducts> {
         var array = users;
         var head = users.removeAt(0);
         var headers = head.split(',');
-        var obj = {};
+        
         var values;
-        var finalres = [];
+        var result = [];
         for (var line in array) {
+          var obj = {};
           values = line.split(",");
           for (var j = 0; j < headers.length; j++) {
             if (values[j].contains(",")) {
@@ -42,15 +43,15 @@ class _ManageProductsState extends State<ManageProducts> {
             } else
               obj[headers[j]] = values[j];
           }
-          final res = http.put(Uri.parse(url), body: json.encode(obj));
-          print(obj);
+          result.add(obj);
         }
+        final res = http.put(Uri.parse(url), body: json.encode(result));
+        print(result);
 
-        // final res = http.put(Uri.parse(url), body: json.encode(obj));
       });
     }
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
