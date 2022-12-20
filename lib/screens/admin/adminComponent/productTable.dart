@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -10,47 +11,46 @@ class ProductTable extends StatefulWidget {
 }
 
 class _ProductTableState extends State<ProductTable> {
-  
+  var url =
+      "https://daily-groceries-db-default-rtdb.firebaseio.com/database/products/data.json";
+  List keys = [];
+  List values = [];
+  List finallist = [];
+  dynamic data;
+  Future getusers() async {
+    final response = await http.get(Uri.parse(url));
 
-  // var url =
-  //     "https://daily-groceries-db-default-rtdb.firebaseio.com/database/products/data.json";
-  // var keys = [];
-  // dynamic data;
-  // Future getusers() async {
-  //   final response = await http.get(Uri.parse(url));
-  //   setState(() {
-  //     List resp = jsonDecode(response.body);
-  //     data = resp;
-  //     print(data[7].values);
-  //     // for (var r in resp) {
-  //     //   var len = r.keys.length;
-  //     //   var k = r.keys.toList();
-  //     //   var d = r.values;
-  //     //   // print(d);
-  //     // }
+    setState(() {
+      var resp = jsonDecode(response.body);
+      var len = resp[0].keys.length;
+      keys = resp[0].keys.toList();
+      for (var i in resp) {
+        var list = [];
+        for (var j = 0; j < i.length; j++) {
+          list.add(i['${keys[j]}']);
+        }
+        values.add(list);
+      }
 
-  //     // print(keys);
-  //     // print("___________________________");
-  //     // print(data);
-  //     // len = res.keys.length;
-  //     // keys = res.keys.toList();
-  //     // print(data[keys][len]);
-  //   });
-  // }
+      for (var j = 0; j < values.length; j++) {
+        if (j < keys.length) {
+          var k = [];
+          for (var v in values) {
+            k.add(v[j]);
+          }
+          finallist.add(k);
+        }
+      }
+    });
+
+    print(finallist);
+  }
 
   @override
   void initState() {
     super.initState();
-    // this.getusers();
+    this.getusers();
   }
-
-  // Widget dataTablebody() => DataTable(
-  //     columns: data.map((e) => DataRow(
-  //       cells: [DataCell(Text(e.keys))]
-  //       )),
-  //     rows: data.map((e) => DataRow(
-  //       cells: [DataCell(Text(e.valus))]
-  //       )));
 
   @override
   Widget build(BuildContext context) {
