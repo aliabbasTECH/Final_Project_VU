@@ -17,6 +17,7 @@ class ManageProducts extends StatefulWidget {
 class _ManageProductsState extends State<ManageProducts> {
   File? csvfile;
   dynamic users;
+  dynamic data;
   var url =
       "https://daily-groceries-db-default-rtdb.firebaseio.com/database/products/data.json";
   selectCSVFile() async {
@@ -31,7 +32,6 @@ class _ManageProductsState extends State<ManageProducts> {
         var array = users;
         var head = users.removeAt(0);
         var headers = head.split(',');
-        
         var values;
         var result = [];
         for (var line in array) {
@@ -46,23 +46,73 @@ class _ManageProductsState extends State<ManageProducts> {
           result.add(obj);
         }
         final res = http.put(Uri.parse(url), body: json.encode(result));
-        print(result);
-
+        getusers();
       });
     }
   }
-  
+// get data in table form
+
+  @override
+  void initState() {
+    super.initState();
+    this.getusers();
+  }
+
+  Future getusers() async {
+    final response = await http.get(Uri.parse(url));
+    setState(() {
+      var resp = jsonDecode(response.body);
+      data = resp;
+    });
+    // data.map((e) => print(e[' name'])).toList();
+  }
+
+  Widget listatble() {
+    final columns = [
+      "productID",
+      "name",
+      "category",
+      "tags",
+      "price",
+      "quantity",
+      "image1"
+    ];
+    final List<dynamic> datas = data;
+    return DataTable(
+        columns: getColumn(columns),
+        rows: datas.map((item) {
+          print(item);
+          return DataRow(
+            cells: [
+              DataCell(Text(item['productID'])),
+              DataCell(Text(item['name'])),
+              DataCell(Text(item['category'])),
+              DataCell(Text(item['price'])),
+              DataCell(Text(item['quantity'])),
+              DataCell(Text(item['tags'])),
+              DataCell(SizedBox(
+                  height: 30, width: 30, child: Image.network(item['image1']))),
+            ],
+          );
+        }).toList());
+  }
+
+  List<DataColumn> getColumn(List<dynamic> columns) => columns
+      .map((dynamic column) => DataColumn(
+            label: Text(column),
+          ))
+      .toList();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Manage Products")),
-      drawer: AdDrawer(),
-      body: Container(
-        child: Column(children: [
+        appBar: AppBar(title: Text("Manage Products")),
+        drawer: AdDrawer(),
+        body: ListView(children: [
           Container(
             child: Row(
               children: [
-                Text("Products"),
+                Text("Upload CSV(comma,delimited) "),
                 Spacer(),
                 ElevatedButton.icon(
                   onPressed: selectCSVFile,
@@ -72,34 +122,12 @@ class _ManageProductsState extends State<ManageProducts> {
               ],
             ),
           ),
-          ProductTable()
-        ]),
-      ),
-    );
+          Container(
+            child: data == null
+                ? Center(child: CircularProgressIndicator())
+                : SingleChildScrollView(
+                    scrollDirection: Axis.horizontal, child: listatble()),
+          )
+        ]));
   }
 }
-
-
-
-
-
-
-//   // for (var h in headers) {
-        //   final ln= values[0];
-        //   // obj[h] = values.map((e) => e.trim());
-        //    print(ln);
-        // }
-
-        // for (var i = 0; i < array.length - 1; i++) {
-        //   var obj = {};
-        //   var li = 1 + i;
-        //   var list = array[li].split(',');
-        //   for (var j = 0; j < headers.length; j++) {
-        //     if (list[j].contains(",")) {
-        //       obj[headers[j]] = list[j].split(",").map((e) => e.trim());
-        //     } else
-        //       obj[headers[j]] = list[j];
-        //   }
-        //   finalresult.add(obj);
-        // print(finalresult);
-        // }
