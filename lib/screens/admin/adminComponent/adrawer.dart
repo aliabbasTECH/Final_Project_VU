@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../login.dart';
 import '../Manageproducts.dart';
 import '../Users.dart';
 import '../admindash.dart';
@@ -48,6 +49,15 @@ class _AdDrawerState extends State<AdDrawer> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const ManageUsers()),
+              );
+            },
+          ),
+          ListTile(
+            title: const Text('Lougout'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
               );
             },
           ),

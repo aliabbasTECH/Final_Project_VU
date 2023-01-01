@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../component/productcard.dart';
+import '../component/waitforApprove.dart';
 import 'login.dart';
 
 class HomePage extends StatefulWidget {
@@ -92,6 +94,7 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ),
                           ),
+                          
                           Card(
                             clipBehavior: Clip.antiAliasWithSaveLayer,
                             color: Color(0xFFF5F5F5),
@@ -110,42 +113,8 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ),
                           ),
-                          Card(
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            color: Color(0xFFF5F5F5),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Image.network(
-                                  'https://dawnbread.com/wp-content/uploads/2021/05/Plain-Bread-PNG-1.png',
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                ),
-                                Text(
-                                  'dawnbread',
-                                ),
-                              ],
-                            ),
-                          ),
-                          Card(
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            color: Color(0xFFF5F5F5),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Image.network(
-                                  'https://dawnbread.com/wp-content/uploads/2021/05/Plain-Bread-PNG-1.png',
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                ),
-                                Text(
-                                  'dawnbread',
-                                ),
-                              ],
-                            ),
-                          ),
+                          ProductCardView()
+                          
                         ],
                       ),
                     ],
@@ -153,48 +122,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               )
             : Center(
-                child: Center(
-                  child: Padding(
-                      padding: EdgeInsets.all(20),
-                      child: Column(
-                        children: [
-                          Padding(
-                              padding: EdgeInsets.all(0),
-                              child: Image.asset('assets/images/comp-2.gif')),
-                          Padding(
-                            padding: EdgeInsets.all(8),
-                            child: Text("we're evaluating your profile",
-                                style: TextStyle(fontSize: 20)),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(12),
-                            child: Flexible(
-                              child: Text(
-                                "in order to make sure our community holds up a standard, we don't allow any profile to get in ",
-                                maxLines: 3,
-                                softWrap: true,
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 150,
-                            height: 50,
-                            child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => LoginScreen(),
-                                    ),
-                                  );
-                                },
-                                child: Text("login",
-                                    style: TextStyle(fontSize: 18))),
-                          )
-                        ],
-                      )),
-                ),
+                child: ApprovelMsg()
               ));
   }
 }
