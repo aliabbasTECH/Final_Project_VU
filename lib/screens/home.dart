@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -20,11 +21,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   dynamic approve;
-
+  Map<String, dynamic> products = {};
+  var pro;
   @override
   void initState() {
     super.initState();
     this.getusers();
+    this.getProducts();
   }
 
   getusers() async {
@@ -38,6 +41,21 @@ class _HomePageState extends State<HomePage> {
           approve = value['Aproved'];
         }
       });
+    });
+  }
+
+  var productUrl =
+      "https://daily-groceries-db-default-rtdb.firebaseio.com/database/products/data.json";
+
+  Future getProducts() async {
+    final response = await http.get(Uri.parse(productUrl));
+    setState(() {
+      dynamic resp = jsonDecode(response.body);
+      pro = resp;
+      resp.asMap().forEach((index, element) {
+        products[index.toString()] = element;
+      });
+      // print(pro);
     });
   }
 
@@ -58,71 +76,14 @@ class _HomePageState extends State<HomePage> {
                           Text(widget.email),
                         ],
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text(
-                          "Products",
-                          style: TextStyle(fontSize: 25),
-                        ),
-                      ),
-                      GridView(
-                        padding: EdgeInsets.zero,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                          childAspectRatio: 1,
-                        ),
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        children: [
-                          Card(
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            color: Color(0xFFF5F5F5),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Image.network(
-                                  'https://www.tazaonline.com/wp-content/uploads/2022/01/Round-Burger-Bun-2pcs-800x436-removebg-preview.png',
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                ),
-                                Text(
-                                  'BUNNYS BIG ROUND BURGER 2PCS',
-                                ),
-                              ],
-                            ),
-                          ),
-                          
-                          Card(
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            color: Color(0xFFF5F5F5),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Image.network(
-                                  'https://dawnbread.com/wp-content/uploads/2021/05/Plain-Bread-PNG-1.png',
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                ),
-                                Text(
-                                  'dawnbread',
-                                ),
-                              ],
-                            ),
-                          ),
-                          ProductCardView()
-                          
-                        ],
-                      ),
+                      
+                     ProductCardView(  product: pro, )
+                        
+                    
                     ],
                   )
                 ],
               )
-            : Center(
-                child: ApprovelMsg()
-              ));
+            : Center(child: ApprovelMsg()));
   }
 }

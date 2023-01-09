@@ -1,63 +1,183 @@
 import 'package:flutter/material.dart';
 
-class ProductCardView extends StatelessWidget {
-  
+import 'singleprductpage.dart';
 
-  
+class ProductCardView extends StatefulWidget {
+  final product;
+
+  ProductCardView({this.product});
+
+  @override
+  State<ProductCardView> createState() => _ProductCardViewState();
+}
+
+class _ProductCardViewState extends State<ProductCardView> {
+  int add = 4;
+  bool iftrue = false;
+  dynamic products;
+  @override
+  void initState() {
+    super.initState();
+    this.getusers();
+  }
+
+  getusers() {
+    setState(() {
+      products = widget.product;
+    });
+  }
+
+  addmore() {
+    iftrue = iftrue ? false : true;
+    add = iftrue == true ? products.length : 4;
+    setState(() {});
+  }
+
+  productdetail(e) {
+   Navigator.push( context, MaterialPageRoute(builder: (context) => SingleProductPage(productData:e)));
+  }
+
   @override
   Widget build(BuildContext context) {
-   
-    return GestureDetector(
-      onTap: (){},
-      child: SizedBox(
-
-        width: 150,
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Stack(
-            alignment: AlignmentDirectional.bottomStart,
-            children: [
-              SizedBox(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.network('', fit: BoxFit.cover)),
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Text(" ON SALE ",
-                      style: Theme.of(context).textTheme.caption?.copyWith(
-                          color: Colors.white,
-                          backgroundColor: Colors.green)),
-                )
-            ],
-          ),
-          const SizedBox(height: 8),
-          SizedBox(
-              child: Text('Productbrand',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: false,
-                  style: Theme.of(context).textTheme.caption)),
-          SizedBox(
-              child: Text('product name',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: false,
-                  style: Theme.of(context).textTheme.bodyText2)),
-          Row(
-            children: [
-              Text('price:300 Rs',
-                  maxLines: 1,
-                  overflow: TextOverflow.clip,
-                  softWrap: false,
-                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green)),
-            ],
-          ),
-          // RatingView(
-          //     value: product.reviews?.rating?.toInt() ?? 0,
-          //     reviewsCount: product.reviews?.count?.toInt() ?? 0),
-        ]),
-      ),
+    return Column(
+      children: [
+        Row(
+          children: [
+            Text(
+              "Products",
+              style: TextStyle(fontSize: 20),
+            ),
+            Spacer(),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 20),
+              ),
+              onPressed: addmore,
+              child: const Text(
+                "show all",
+                style: TextStyle(fontSize: 12),
+              ),
+            ),
+          ],
+        ),
+        Container(
+          height: MediaQuery.of(context).size.height,
+          child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+              ),
+              itemCount: add,
+              itemBuilder: (BuildContext context, int index) {
+                return GestureDetector(
+                  onTap: () => productdetail(products[index]),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    width: 80,
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Stack(
+                            alignment: AlignmentDirectional.bottomStart,
+                            children: [
+                              SizedBox(
+                                  height: 100,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Image.network(
+                                      "${products[index]['image1']}",
+                                      fit: BoxFit.contain)),
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text("${products[index]['tags']}",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .caption
+                                        ?.copyWith(
+                                            color: Colors.white,
+                                            backgroundColor: Colors.green)),
+                              )
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          SizedBox(
+                              child: Text('${products[index]['category']}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: false,
+                                  style: Theme.of(context).textTheme.caption)),
+                          SizedBox(
+                              child: Text('${products[index]['name']}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: false,
+                                  style:
+                                      Theme.of(context).textTheme.bodyText2)),
+                          Row(
+                            children: [
+                              Text('${products[index]['price']}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.clip,
+                                  softWrap: false,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText2
+                                      ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.green)),
+                            ],
+                          ),
+                        ]),
+                  ),
+                );
+              }),
+        ),
+      ],
     );
   }
 }
+
+// GestureDetector(
+//       onTap: () {},
+//       child: SizedBox(
+//         width: 100,
+//         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+//           Stack(
+//             alignment: AlignmentDirectional.bottomStart,
+//             children: [
+//               SizedBox(
+//                   height: 100,
+//                   width: MediaQuery.of(context).size.width,
+//                   child: Image.network('', fit: BoxFit.cover)),
+//               Padding(
+//                 padding: const EdgeInsets.all(4.0),
+//                 child: Text(" ON SALE ",
+//                     style: Theme.of(context).textTheme.caption?.copyWith(
+//                         color: Colors.white, backgroundColor: Colors.green)),
+//               )
+//             ],
+//           ),
+//           const SizedBox(height: 8),
+//           SizedBox(
+//               child: Text('Productbrand',
+//                   maxLines: 1,
+//                   overflow: TextOverflow.ellipsis,
+//                   softWrap: false,
+//                   style: Theme.of(context).textTheme.caption)),
+//           SizedBox(
+//               child: Text('product name',
+//                   maxLines: 1,
+//                   overflow: TextOverflow.ellipsis,
+//                   softWrap: false,
+//                   style: Theme.of(context).textTheme.bodyText2)),
+//           Row(
+//             children: [
+//               Text('price:300 Rs',
+//                   maxLines: 1,
+//                   overflow: TextOverflow.clip,
+//                   softWrap: false,
+//                   style: Theme.of(context).textTheme.bodyText2?.copyWith(
+//                       fontWeight: FontWeight.bold, color: Colors.green)),
+//             ],
+//           ),
+//         ]),
+//       ),
+//     );
