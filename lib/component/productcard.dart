@@ -4,8 +4,9 @@ import 'singleprductpage.dart';
 
 class ProductCardView extends StatefulWidget {
   final product;
+  final cUser;
 
-  ProductCardView({this.product});
+  ProductCardView({this.product,this.cUser});
 
   @override
   State<ProductCardView> createState() => _ProductCardViewState();
@@ -34,7 +35,7 @@ class _ProductCardViewState extends State<ProductCardView> {
   }
 
   productdetail(e) {
-   Navigator.push( context, MaterialPageRoute(builder: (context) => SingleProductPage(productData:e)));
+   Navigator.push( context, MaterialPageRoute(builder: (context) => SingleProductPage(productData:e,cruser:widget.cUser)));
   }
 
   @override
@@ -68,7 +69,9 @@ class _ProductCardViewState extends State<ProductCardView> {
               ),
               itemCount: add,
               itemBuilder: (BuildContext context, int index) {
-                return GestureDetector(
+                return products[index]['image1'] == ''? 
+                                 Center()
+                                  :GestureDetector(
                   onTap: () => productdetail(products[index]),
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 5),
@@ -82,7 +85,9 @@ class _ProductCardViewState extends State<ProductCardView> {
                               SizedBox(
                                   height: 100,
                                   width: MediaQuery.of(context).size.width,
-                                  child: Image.network(
+                                  child:  products[index]['image1'] == ''? 
+                                 Center(child: CircularProgressIndicator()):
+                                  Image.network(
                                       "${products[index]['image1']}",
                                       fit: BoxFit.contain)),
                               Padding(

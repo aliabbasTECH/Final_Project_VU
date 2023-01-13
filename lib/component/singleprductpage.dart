@@ -1,13 +1,29 @@
 import 'package:flutter/material.dart';
 
-class SingleProductPage extends StatelessWidget {
-  final productData;
+import '../screens/cartPage.dart';
 
-  SingleProductPage({this.productData});
+class SingleProductPage extends StatefulWidget {
+  final productData;
+  final cruser;
+
+  SingleProductPage({this.productData, this.cruser});
+
+  @override
+  State<SingleProductPage> createState() => _SingleProductPageState();
+}
+
+class _SingleProductPageState extends State<SingleProductPage> {
+  List cartData = [];
+
+  NavTocartPage(e) {
+    print(e);
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => CartPage(data: e)));
+  }
 
   @override
   Widget build(BuildContext context) {
-    print(productData);
+    print(widget.cruser);
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -17,35 +33,31 @@ class SingleProductPage extends StatelessWidget {
               Container(
                 height: 300,
                 width: double.infinity,
-                child: Image.network('${productData["image1"]}'),
+                child: Image.network('${widget.productData["image1"]}'),
               ),
               SizedBox(height: 20),
               Text(
-                '${productData["name"]}',
+                '${widget.productData["name"]}',
                 style: Theme.of(context).textTheme.headline6,
               ),
               SizedBox(height: 10),
               Text(
-                '\Rs${productData["price"]}',
+                '\Rs${widget.productData["price"]}',
                 style: Theme.of(context).textTheme.subtitle1,
               ),
               SizedBox(height: 10),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-                  style: Theme.of(context).textTheme.bodyText2,
-                ),
-              ),
               SizedBox(height: 20),
               Container(
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Add product to cart
-                  },
+                  onPressed: () => NavTocartPage(cartData = [
+                    widget.cruser[0],
+                    widget.cruser[1],
+                    widget.productData["name"],
+                    widget.productData["price"],
+                    widget.productData["productID"]
+                  ]),
                   child: Text(
                     'Add to Cart',
                     style: TextStyle(color: Colors.white),

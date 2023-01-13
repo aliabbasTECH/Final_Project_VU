@@ -20,6 +20,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  dynamic crUser;
   dynamic approve;
   Map<String, dynamic> products = {};
   var pro;
@@ -39,6 +40,10 @@ class _HomePageState extends State<HomePage> {
       res.forEach((key, value) async {
         if (widget.email == value["email"] && value['Aproved'] == true) {
           approve = value['Aproved'];
+          crUser = [
+            value["email"],
+            key,
+          ];
         }
       });
     });
@@ -76,10 +81,9 @@ class _HomePageState extends State<HomePage> {
                           Text(widget.email),
                         ],
                       ),
-                      
-                     ProductCardView(  product: pro, )
-                        
-                    
+                      ProductCardView(
+                        product: pro,cUser:crUser
+                      )
                     ],
                   )
                 ],
