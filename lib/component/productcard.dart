@@ -34,8 +34,8 @@ class _ProductCardViewState extends State<ProductCardView> {
     setState(() {});
   }
 
-  productdetail(e) {
-   Navigator.push( context, MaterialPageRoute(builder: (context) => SingleProductPage(productData:e,cruser:widget.cUser)));
+  productdetail(e,p) {
+   Navigator.push( context, MaterialPageRoute(builder: (context) => SingleProductPage(productData:e,cruser:widget.cUser,price:int.parse(p))));
   }
 
   @override
@@ -72,7 +72,7 @@ class _ProductCardViewState extends State<ProductCardView> {
                 return products[index]['image1'] == ''? 
                                  Center()
                                   :GestureDetector(
-                  onTap: () => productdetail(products[index]),
+                  onTap: () => productdetail(products[index],products[index]['price']),
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 5),
                     width: 80,

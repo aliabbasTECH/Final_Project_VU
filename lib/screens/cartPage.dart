@@ -9,11 +9,14 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+
+ 
+
   @override
   Widget build(BuildContext context) {
     print(widget.data);
     return Scaffold(
-      body: Center(child: Text(widget.data.toString())),
+      body: Center(child: Text("cart")),
     );
   }
 }
