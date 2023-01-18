@@ -44,6 +44,7 @@ class _SingleProductPageState extends State<SingleProductPage> {
 
   NavToPlaceorder(e) {
     print(e);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage(data: e)));
   }
 
   @override
