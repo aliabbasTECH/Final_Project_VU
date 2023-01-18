@@ -15,6 +15,7 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  dynamic userdata;
   dynamic url;
   dynamic cartproducts;
   dynamic keysdata;
@@ -50,9 +51,47 @@ class _CartPageState extends State<CartPage> {
     });
   }
 
-  Placeoder(e){
-     print(e);
-    Navigator.push(context, MaterialPageRoute(builder: (context) => PlaceOrder(orderData: e)));
+  NavToPlaceorder(e) async {
+    var url =
+        "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/${widget.data['uuid']}.json";
+    final response = await http.get(Uri.parse(url));
+    setState(() {
+      dynamic resp = jsonDecode(response.body);
+      userdata = resp;
+      int cra = int.parse(userdata['Amount']);
+      int pr = e['price'] as int;
+
+      // print(pr);
+      if (pr <= cra && userdata['Amount'] != null && cra != 0) {
+        print("pament suc");
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => PlaceOrder(orderData: e)));
+      } else if (cra == null || pr > cra) {
+        _LowAmountDialog(context);
+      }
+    });
+  }
+
+  Future<void> _LowAmountDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Low amount'),
+            content: Text(
+                'your amount is low plese contact Admin to fill up your amount admin contact = 03412771439  '),
+            actions: <Widget>[
+              ElevatedButton(
+                child: Text('OK'),
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+            ],
+          );
+        });
   }
 
   @override
@@ -101,7 +140,7 @@ class _CartPageState extends State<CartPage> {
                               size: 25,
                               color: Colors.green,
                             ),
-                            onPressed: () => Placeoder(orderdata={
+                            onPressed: () => NavToPlaceorder(orderdata={
                             "date": '${today.day}-${today.month}-${today.year}',
                             "email": cartproducts[keysdata[index]]['email'],
                             "uuid": cartproducts[keysdata[index]]['uuid'],

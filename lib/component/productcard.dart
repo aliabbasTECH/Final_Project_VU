@@ -66,6 +66,7 @@ class _ProductCardViewState extends State<ProductCardView> {
           child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
+                
               ),
               itemCount: add,
               itemBuilder: (BuildContext context, int index) {
@@ -74,7 +75,18 @@ class _ProductCardViewState extends State<ProductCardView> {
                                   :GestureDetector(
                   onTap: () => productdetail(products[index],products[index]['price']),
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 5),
+                         decoration:  BoxDecoration(
+                          color: Colors.white,
+                                 borderRadius:  BorderRadius.circular(5),
+                                 boxShadow: [ BoxShadow(
+                                  color: Colors.grey,
+                                  blurRadius: 4,
+                                  offset: Offset(1, 1), // Shadow position
+                                  ),
+                                 ],
+                                  ),
+                    padding: EdgeInsets.all(5),
+                    margin: EdgeInsets.all(5),
                     width: 80,
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

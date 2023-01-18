@@ -48,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
           MaterialPageRoute(
             builder: (context) => HomePage(
               email: value["email"],
-              pin: value["pin"].toString(),
+              
             ),
           ),
         );

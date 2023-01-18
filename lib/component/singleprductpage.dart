@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import '../screens/cartPage.dart';
+import '../screens/placeOrder.dart';
 
 class SingleProductPage extends StatefulWidget {
   final productData;
@@ -14,9 +15,10 @@ class SingleProductPage extends StatefulWidget {
 }
 
 class _SingleProductPageState extends State<SingleProductPage> {
+  dynamic userdata;
   dynamic cartData;
   int _quantity = 1;
-   DateTime today = DateTime.now();
+  DateTime today = DateTime.now();
   void incrementQuantity() {
     setState(() {
       _quantity++;
@@ -42,17 +44,55 @@ class _SingleProductPageState extends State<SingleProductPage> {
             MaterialPageRoute(builder: (context) => CartPage(data: e))));
   }
 
-  NavToPlaceorder(e) {
-    print(e);
-    Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage(data: e)));
+  NavToPlaceorder(e) async {
+    var url =
+        "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/${widget.cruser[1]}.json";
+    final response = await http.get(Uri.parse(url));
+    setState(() {
+      dynamic resp = jsonDecode(response.body);
+      userdata = resp;
+      int cra = int.parse(userdata['Amount']);
+      int pr = e['price'] as int;
+
+      // print(pr);
+      if (pr <= cra && userdata['Amount'] != null && cra != 0) {
+        print("pament suc");
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => PlaceOrder(orderData: e)));
+      } else if (cra == null || widget.price > cra) {
+        _LowAmountDialog(context);
+      }
+    });
+  }
+
+  Future<void> _LowAmountDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Low amount'),
+            content: Text(
+                'your amount is low plese contact Admin to fill up your amount admin contact = 03412771439  '),
+            actions: <Widget>[
+              ElevatedButton(
+                child: Text('OK'),
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+            ],
+          );
+        });
   }
 
   @override
   Widget build(BuildContext context) {
-   
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
+        appBar: AppBar(title: Text('single product page '),),
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -112,7 +152,7 @@ class _SingleProductPageState extends State<SingleProductPage> {
                             "price": widget.price,
                             "productId": widget.productData["productID"],
                             "quantity": _quantity,
-                            "image":widget.productData["image1"]
+                            "image": widget.productData["image1"]
                           }),
                           child: Text(
                             'Add to Cart',
@@ -133,7 +173,7 @@ class _SingleProductPageState extends State<SingleProductPage> {
                             "price": widget.price,
                             "productId": widget.productData["productID"],
                             "quantity": _quantity,
-                            "image":widget.productData["image1"]
+                            "image": widget.productData["image1"]
                           }),
                           child: Text(
                             'Place Order',

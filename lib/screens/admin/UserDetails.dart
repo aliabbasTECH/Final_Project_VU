@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
 import 'Users.dart';
+import 'adminComponent/adrawer.dart';
 
 class Userdetails extends StatefulWidget {
   final Data;
@@ -16,9 +17,10 @@ class Userdetails extends StatefulWidget {
 
 class _UserdetailsState extends State<Userdetails> {
   TextEditingController _textFieldController = TextEditingController();
+  dynamic userData;
   dynamic amount;
   dynamic valueText;
-
+  dynamic usercarts;
   @override
   void initState() {
     super.initState();
@@ -31,7 +33,9 @@ class _UserdetailsState extends State<Userdetails> {
     setState(() {
       dynamic res = jsonDecode(response.body);
       amount = res['Amount'];
-      print(amount);
+      userData = res;
+      usercarts = res['data'];
+      print(usercarts);
     });
   }
 
@@ -113,13 +117,13 @@ class _UserdetailsState extends State<Userdetails> {
                 child: Text('OK'),
                 onPressed: () {
                   setState(() async {
-                    amount = valueText;
                     var url =
                         "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/${widget.Data['uuid']}.json";
                     http.patch(Uri.parse(url),
                         body: jsonEncode({
-                          'Amount': amount,
+                          'Amount': valueText,
                         }));
+                    await getusers();
                     Navigator.pop(context);
                   });
                 },
@@ -133,104 +137,119 @@ class _UserdetailsState extends State<Userdetails> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Container(
-          padding: EdgeInsets.all(20),
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  width: double.infinity,
+        appBar: AppBar(title: Text("User detail")),
+        drawer: AdDrawer(),
+        body: userData == null
+            ? Center(child: CircularProgressIndicator())
+            : Container(
+                padding: EdgeInsets.all(20),
+                child: SingleChildScrollView(
                   child: Column(
-                    children: [
-                      CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            'https://toppng.com/uploads/preview/roger-berry-avatar-placeholder-11562991561rbrfzlng6h.png'),
-                        radius: 50,
-                      ),
+                    children: <Widget>[
                       SizedBox(
-                        height: 10,
+                        width: double.infinity,
+                        child: Column(
+                          children: [
+                            CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                  'https://toppng.com/uploads/preview/roger-berry-avatar-placeholder-11562991561rbrfzlng6h.png'),
+                              radius: 50,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "${userData['firstName']}${userData['lastName']} ",
+                              style: TextStyle(fontSize: 25),
+                            ),
+                          ],
+                        ),
                       ),
-                      Text(
-                        "${widget.Data['firstName']}${widget.Data['lastName']} ",
-                        style: TextStyle(fontSize: 25),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Column(
+                              children: [
+                                Text(
+                                    "Current Amount : ${amount == null ? "00000" : amount} ",
+                                    style: TextStyle(fontSize: 18)),
+                                Row(
+                                  children: [
+                                    Spacer(),
+                                    ElevatedButton(
+                                        onPressed: () =>
+                                            _displayTextInputDialog(context),
+                                        child: Text("add")),
+                                  ],
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              "UserDetails",
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            Divider(
+                              color: Colors.green,
+                            ),
+                            Text("Email : ${userData['email']}"),
+                            Divider(
+                              color: Colors.green,
+                            ),
+                            Text("mobile : ${userData['mobile']}"),
+                            Divider(
+                              color: Colors.green,
+                            ),
+                            Text("city : ${userData['city']}"),
+                            Divider(
+                              color: Colors.green,
+                            ),
+                            Text(
+                                "Address : ${userData['houseNo']} ${userData['socity']} ${userData['city']}"),
+                            Divider(
+                              color: Colors.green,
+                            ),
+                            Text("Approve : ${userData['Aproved']}"),
+                          ],
+                        ),
                       ),
+                     
+                      // productsbyUser();
+                      
+                      Container(
+                        child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 30),
+                            child: Row(
+                              children: [
+                                ElevatedButton(
+                                    onPressed: () =>
+                                        deleteUser(widget.Data['uuid']),
+                                    child: Text("Delete")),
+                                Spacer(),
+                                userData['Aproved'] == false
+                                    ? ElevatedButton(
+                                        onPressed: () =>
+                                            approve(widget.Data['uuid']),
+                                        child: Text("Approve"))
+                                    : ElevatedButton(
+                                        onPressed: () =>
+                                            disapprove(widget.Data['uuid']),
+                                        child: Text("refused")),
+                              ],
+                            )),
+                      )
                     ],
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        children: [
-                          Text("Current Amount : $amount ",
-                              style: TextStyle(fontSize: 18)),
-                          Spacer(),
-                          ElevatedButton(
-                              onPressed: () => _displayTextInputDialog(context),
-                              child: Text("add"))
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        "UserDetails",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      Divider(
-                        color: Colors.green,
-                      ),
-                      Text("Email : ${widget.Data['email']}"),
-                      Divider(
-                        color: Colors.green,
-                      ),
-                      Text("mobile : ${widget.Data['mobile']}"),
-                      Divider(
-                        color: Colors.green,
-                      ),
-                      Text("city : ${widget.Data['city']}"),
-                      Divider(
-                        color: Colors.green,
-                      ),
-                      Text(
-                          "Address : ${widget.Data['houseNo']} ${widget.Data['socity']} ${widget.Data['city']}"),
-                      Divider(
-                        color: Colors.green,
-                      ),
-                      Text("Approve : ${widget.Data['Aproved']}"),
-                    ],
-                  ),
-                ),
-                Container(
-                  child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-                      child: Row(
-                        children: [
-                          ElevatedButton(
-                              onPressed: () => deleteUser(widget.Data['uuid']),
-                              child: Text("Delete")),
-                          Spacer(),
-                          widget.Data['Aproved'] == false
-                              ? ElevatedButton(
-                                  onPressed: () => approve(widget.Data['uuid']),
-                                  child: Text("Approve"))
-                              : ElevatedButton(
-                                  onPressed: () =>
-                                      disapprove(widget.Data['uuid']),
-                                  child: Text("refused")),
-                        ],
-                      )),
-                )
-              ],
-            ),
-          ),
-        ),
+              ),
       ),
     );
   }
