@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
 import 'home.dart';
 import 'login.dart';
@@ -42,7 +41,7 @@ class _RegisterState extends State<Register> {
               'date': date.toString(),
             }))
         .then(
-         await Navigator.push(context,MaterialPageRoute(builder: (context) => HomePage(email:_email.text,pin:_pin.text),),)
+         await Navigator.push(context,MaterialPageRoute(builder: (context) => HomePage(email:_email.text),),)
         );
     
   }

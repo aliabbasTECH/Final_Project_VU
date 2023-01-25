@@ -37,20 +37,7 @@ class _ManageUsersState extends State<ManageUsers> {
     });
   }
 
-  // approve(e) async {
-  //   setState(() async {
-  //     var appr = await http.get(Uri.parse(
-  //         "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/$e/Aproved.json"));
-  //     if (appr != true) {
-  //       http.patch(
-  //           Uri.parse(
-  //               "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/$e.json"),
-  //           body: jsonEncode({
-  //             'Aproved': true,
-  //           }));
-  //     }
-  //   });
-  // }
+  
 
   UserdetailPage(e) {
     Navigator.push(
@@ -81,8 +68,6 @@ class _ManageUsersState extends State<ManageUsers> {
                      "socity" :data[keys[index]]["socity"],
                      "uuid" :keys[index],
                      "Amount" :data[keys[index]]['Amount'],
- 
-
                     }
                     ),
                   child: Container(

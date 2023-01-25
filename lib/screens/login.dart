@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => HomePage(
-              email: value["email"],
+              email: value["email"]
               
             ),
           ),

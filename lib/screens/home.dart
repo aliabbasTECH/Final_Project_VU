@@ -3,18 +3,20 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../component/categories.dart';
 import '../component/productcard.dart';
+import '../component/slider.dart';
 import '../component/userdrawer.dart';
 import '../component/waitforApprove.dart';
 import 'login.dart';
 
 class HomePage extends StatefulWidget {
   final email;
-  final pin;
+  
 
   const HomePage({
     @required this.email,
-    @required this.pin,
+    
   });
   @override
   State<HomePage> createState() => _HomePageState();
@@ -49,6 +51,7 @@ class _HomePageState extends State<HomePage> {
           crUser = [
             value["email"],
             key,
+            username,
           ];
         }
       });
@@ -77,51 +80,19 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
             centerTitle: true,
             title: approve.toString() == "true"
-                ? Text("Daily Groceries")
+                ? Text("GROCETERIA")
                 : Text(" Pending Aproval")),
-                drawer: UserDrawer(drEmail:widget.email,drPin:widget.pin,drkey:crUser[1]),
-        body: approve.toString() == "true"
-            ? ListView(
-                children: [
-                  Column(
-                    children: [
-                      Container(
-                        color: Color.fromARGB(255, 252, 220, 103),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Row(
-                            children: [
-                              Column(
-                                children: [
-                                  Text("$username",style: TextStyle(fontSize: 19,color: Colors.green),),
-                                  Text(widget.email,style: TextStyle(fontSize: 12,color: Colors.green)),
-                                ],
-                              ),
-                              Spacer(),
-                              Container(
-                                padding: EdgeInsets.all(20),
-                                decoration: new BoxDecoration(
-                                 color: Colors.green,
-                                 borderRadius: new BorderRadius.circular(50),
-                                 boxShadow: [
-      BoxShadow(
-        color: Colors.grey,
-        blurRadius: 4,
-        offset: Offset(1, 1), // Shadow position
-      ),
-    ],
-                                  ),
-                                child: Text('$camount Rs',style: TextStyle(fontSize: 20))
-                                )
-                            ],
-                          ),
-                        ),
-                      ),
-                      ProductCardView(product: pro, cUser: crUser)
-                    ],
-                  )
+                drawer: UserDrawer(userdata:crUser),
+        body:  approve.toString() == "true"
+            ? camount == null? Center(child: CircularProgressIndicator()) : SingleChildScrollView(
+              child: Column(
+                children: [            
+                  ImageSliderDemo(),
+                 CategoriesList(),
+                pro == null? Center(child: CircularProgressIndicator()) : ProductCardView(product: pro, cUser: crUser)
                 ],
-              )
+              ),
+            )
             : Center(child: ApprovelMsg())
             );
   }

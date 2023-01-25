@@ -38,7 +38,7 @@ class _SingleProductPageState extends State<SingleProductPage> {
 
   NavTocartPage(e) async {
     var url =
-        "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/${widget.cruser[1]}/data.json";
+        "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/${widget.cruser[1]}/savecartitem.json";
     var res = await http.post(Uri.parse(url), body: json.encode(e)).then(
         await Navigator.push(context,
             MaterialPageRoute(builder: (context) => CartPage(data: e))));
@@ -148,7 +148,8 @@ class _SingleProductPageState extends State<SingleProductPage> {
                             "date": '${today.day}-${today.month}-${today.year}',
                             "email": widget.cruser[0],
                             "uuid": widget.cruser[1],
-                            "name": widget.productData["name"],
+                            "uname": widget.cruser[2],
+                            "Pname": widget.productData["name"],
                             "price": widget.price,
                             "productId": widget.productData["productID"],
                             "quantity": _quantity,
@@ -169,7 +170,8 @@ class _SingleProductPageState extends State<SingleProductPage> {
                             "date": '${today.day}-${today.month}-${today.year}',
                             "email": widget.cruser[0],
                             "uuid": widget.cruser[1],
-                            "name": widget.productData["name"],
+                            "uname": widget.cruser[2],
+                            "Pname": widget.productData["name"],
                             "price": widget.price,
                             "productId": widget.productData["productID"],
                             "quantity": _quantity,

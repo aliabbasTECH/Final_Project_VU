@@ -35,7 +35,7 @@ class _WelcomeWidgetState extends State<WelcomeWidget> {
                 Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
                     child: Text(
-                      'Daily Groceries',
+                      'GROCETERIA',
                       style: TextStyle(fontSize: 20),
                     )),
                 Padding(

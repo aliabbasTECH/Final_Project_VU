@@ -20,10 +20,10 @@ class _CartPageState extends State<CartPage> {
   dynamic cartproducts;
   dynamic keysdata;
   dynamic orderdata;
-   DateTime today = DateTime.now();
+  DateTime today = DateTime.now();
   Future getusersdata() async {
     url =
-        "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/${widget.data['uuid']}/data.json";
+        "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/${widget.data['uuid']}/savecartitem.json";
     final response = await http.get(Uri.parse(url));
     setState(() {
       dynamic resp = jsonDecode(response.body);
@@ -37,7 +37,7 @@ class _CartPageState extends State<CartPage> {
 
   removecartobj(e) async {
     dynamic urltodelet =
-        "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/${widget.data['uuid']}/data/$e.json";
+        "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/${widget.data['uuid']}/savecartitem/$e.json";
     setState(() async {
       final resp = await http.delete(Uri.parse(urltodelet));
 
@@ -102,7 +102,7 @@ class _CartPageState extends State<CartPage> {
 
   @override
   Widget build(BuildContext context) {
-    
+    print(cartproducts);
     return Scaffold(
       appBar: AppBar(
         title: Text("Cart"),
@@ -121,7 +121,7 @@ class _CartPageState extends State<CartPage> {
                         fit: BoxFit.cover),
                   ),
                   title: Text(
-                    "${cartproducts[keysdata[index]]['name']}",
+                    "${cartproducts[keysdata[index]]['Pname']}",
                     style: TextStyle(fontSize: 15),
                   ),
                   subtitle: Text(
@@ -129,7 +129,7 @@ class _CartPageState extends State<CartPage> {
                     style: TextStyle(fontSize: 12),
                   ),
                   trailing: SizedBox(
-                    width: 45,
+                    width: 54,
                     child: Row(
                       children: [
                         SizedBox(
@@ -140,16 +140,20 @@ class _CartPageState extends State<CartPage> {
                               size: 25,
                               color: Colors.green,
                             ),
-                            onPressed: () => NavToPlaceorder(orderdata={
-                            "date": '${today.day}-${today.month}-${today.year}',
-                            "email": cartproducts[keysdata[index]]['email'],
-                            "uuid": cartproducts[keysdata[index]]['uuid'],
-                            "name": cartproducts[keysdata[index]]['name'],
-                            "price": cartproducts[keysdata[index]]['price'],
-                            "productId": cartproducts[keysdata[index]]["productID"],
-                            "quantity": cartproducts[keysdata[index]]['quantity'],
-                            "image":cartproducts[keysdata[index]]['image']
-                          }),
+                            onPressed: () => NavToPlaceorder(orderdata = {
+                              "date":
+                                  '${today.day}-${today.month}-${today.year}',
+                              "email": cartproducts[keysdata[index]]['email'],
+                              "uuid": cartproducts[keysdata[index]]['uuid'],
+                              "uname": cartproducts[keysdata[index]]['uname'],
+                              "Pname": cartproducts[keysdata[index]]['Pname'],
+                              "price": cartproducts[keysdata[index]]['price'],
+                              "productId": cartproducts[keysdata[index]]
+                                  ["productId"],
+                              "quantity": cartproducts[keysdata[index]]
+                                  ['quantity'],
+                              "image": cartproducts[keysdata[index]]['image']
+                            }),
                           ),
                         ),
                         Spacer(),

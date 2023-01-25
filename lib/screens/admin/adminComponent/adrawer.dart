@@ -4,6 +4,7 @@ import '../../login.dart';
 import '../Manageproducts.dart';
 import '../Users.dart';
 import '../admindash.dart';
+import '../Admin_orders.dart';
 
 class AdDrawer extends StatefulWidget {
   const AdDrawer({super.key});
@@ -52,6 +53,16 @@ class _AdDrawerState extends State<AdDrawer> {
               );
             },
           ),
+          ListTile(
+            title: const Text('Manage orders'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const OrdersAdmin()),
+              );
+            },
+          ),
+          
           ListTile(
             title: const Text('Lougout'),
             onTap: () {

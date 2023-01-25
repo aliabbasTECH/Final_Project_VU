@@ -15,7 +15,7 @@ class PlaceOrder extends StatefulWidget {
 
 class _PlaceOrderState extends State<PlaceOrder> {
   dynamic url;
-  dynamic cartproducts;
+  dynamic userdata;
   dynamic keysdata;
   dynamic productinfo;
   int detectedAmount = 0;
@@ -28,9 +28,9 @@ class _PlaceOrderState extends State<PlaceOrder> {
     setState(() {
       dynamic resp = jsonDecode(response.body);
       if (resp != null) {
-        cartproducts = resp;
+        userdata = resp;
         productinfo = widget.orderData;
-        int cra = int.parse(cartproducts['Amount']);
+        int cra = int.parse(userdata['Amount']);
         int prd = productinfo['price'] as int;
           detectedAmount = cra - prd;
       }
@@ -50,36 +50,40 @@ class _PlaceOrderState extends State<PlaceOrder> {
 
       var res = await http.post(Uri.parse(orderurl),
         body: json.encode({
-          'userName': cartproducts['name'],
-          'email': cartproducts['email'],
-          'Productid': productinfo['productId'],
-          'productNmae': widget.orderData['name'],
-          'mobile': cartproducts['mobile'],
-          'address': cartproducts['mobile'],
-          'quantity':'${cartproducts['houseNo']} ${cartproducts['socity']} ${cartproducts['city']}',
+          'userName':widget.orderData['uname'],
+          'email':userdata['email'],
+          'Productid':productinfo['productId'],
+          'Pname':widget.orderData['Pname'],
+          'mobile':userdata['mobile'],
+          'address':'${userdata['houseNo']} ${userdata['socity']} ${userdata['city']}',
+          'quantity':userdata['quantity'],
           'price': productinfo['price'],
-          'currentAmount': cartproducts['mobile'],
-          'deducted Amount': detectedAmount ,
+          'privousAmount': userdata['Amount'],
+          'deductedAmount': detectedAmount ,
           'date' : productinfo['date'],
-          'image':widget.orderData['image']
+          'image':widget.orderData['image'],
+          'userUuid':productinfo['uuid'],
+          'delivered':false,
         }));
        
       var userurl =
         "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/${widget.orderData['uuid']}/orders.json";
       var respuser = await http.post(Uri.parse(userurl),
         body: json.encode({
-          'userName': cartproducts['name'],
-          'email': cartproducts['email'],
-          'Productid': productinfo['productId'],
-          'productNmae': widget.orderData['name'],
-          'mobile': cartproducts['mobile'],
-          'address': cartproducts['mobile'],
-          'quantity':'${cartproducts['houseNo']} ${cartproducts['socity']} ${cartproducts['city']}',
+          'userName':widget.orderData['uname'],
+          'email':userdata['email'],
+          'Productid':productinfo['productId'],
+          'Pname':widget.orderData['Pname'],
+          'mobile':userdata['mobile'],
+          'address':'${userdata['houseNo']} ${userdata['socity']} ${userdata['city']}',
+          'quantity':userdata['quantity'],
           'price': productinfo['price'],
-          'currentAmount': cartproducts['mobile'],
-          'deducted Amount': detectedAmount ,
+          'privousAmount': userdata['Amount'],
+          'deductedAmount': detectedAmount ,
           'date' : productinfo['date'],
-          'image':widget.orderData['image']
+          'image':widget.orderData['image'],
+          'userUuid':productinfo['uuid'],
+          'delivered':false,
         }));
         var Amountupdateurl =
         "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/${widget.orderData['uuid']}.json";
@@ -88,17 +92,17 @@ class _PlaceOrderState extends State<PlaceOrder> {
                       'Amount': detectedAmount.toString(),
                     }))
      .then(
-     await Navigator.push(context,MaterialPageRoute(builder: (context) => HomePage(email:cartproducts['email'],pin:cartproducts['pin']),),)
+     await Navigator.push(context,MaterialPageRoute(builder: (context) => HomePage(email:userdata['email']),),)
      );
   }
 
   @override
   Widget build(BuildContext context) {
-    print(" thisis =================> $detectedAmount");
+    print(" thisis =================> $productinfo");
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(title: Text("User detail")),
-        body: cartproducts == null
+        appBar: AppBar(title: Text("place order")),
+        body: userdata == null
             ? Center(child: CircularProgressIndicator())
             : SingleChildScrollView(
                 child: Container(
@@ -118,7 +122,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                               height: 10,
                             ),
                             Text(
-                              "${widget.orderData['name']} ",
+                              "${widget.orderData['Pname']} ",
                               style: TextStyle(fontSize: 18),
                             ),
                           ],
@@ -139,25 +143,29 @@ class _PlaceOrderState extends State<PlaceOrder> {
                             Divider(
                               color: Colors.green,
                             ),
-                            Text("Email : ${cartproducts['email']} "),
+                            Text("Username : ${widget.orderData['uname']} "),
                             Divider(
                               color: Colors.green,
                             ),
-                            Text("mobile : ${cartproducts['mobile']} "),
+                            Text("Email : ${userdata['email']} "),
                             Divider(
                               color: Colors.green,
                             ),
-                            Text("city : ${cartproducts['city']} "),
+                            Text("mobile : ${userdata['mobile']} "),
+                            Divider(
+                              color: Colors.green,
+                            ),
+                            Text("city : ${userdata['city']} "),
                             Divider(
                               color: Colors.green,
                             ),
                             Text(
-                                "Address : ${cartproducts['houseNo']} ${cartproducts['socity']} ${cartproducts['city']} "),
+                                "Address : ${userdata['houseNo']} ${userdata['socity']} ${userdata['city']} "),
                             Divider(
                               color: Colors.green,
                             ),
                             Text(
-                                "CurrentAmount : ${cartproducts['Amount']}Rs "),
+                                "privousAmount : ${userdata['Amount']}Rs "),
                             Divider(
                               color: Colors.green,
                             ),

@@ -43,33 +43,35 @@ class _UserOderDAtaState extends State<UserOderDAta> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Product"),
+        title: Text("Orders"),
       ),
-      body: cartproducts != null
-          ? const emptyCart()
-          : ListView.builder(
-              itemCount: cartproducts.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: SizedBox(
-                    height: 40,
-                    width: 30,
-                    child: Image.network(
-                        "${cartproducts[keysdata[index]]['image']}",
-                        fit: BoxFit.cover),
-                  ),
-                  title: Text(
-                    "${cartproducts[keysdata[index]]['name']}",
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  subtitle: Text(
-                    "price : ${cartproducts[keysdata[index]]['price']} | Date:${cartproducts[keysdata[index]]['date']}",
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  trailing: SizedBox(width: 45, child: Text("")),
-                );
-              },
-            ),
+      body: Container(
+        child: cartproducts == null
+            ?  emptyCart()
+            : ListView.builder(
+                itemCount: cartproducts.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: SizedBox(
+                      height: 40,
+                      width: 30,
+                      child: Image.network(
+                          "${cartproducts[keysdata[index]]['image']}",
+                          fit: BoxFit.cover),
+                    ),
+                    title: Text(
+                      "${cartproducts[keysdata[index]]['productNmae']}",
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    subtitle: Text(
+                      "price : ${cartproducts[keysdata[index]]['price']} | Date:${cartproducts[keysdata[index]]['date']}",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    trailing: SizedBox(width: 100, child: Text("inprocess")),
+                  );
+                },
+              ),
+      ),
     );
   }
 }

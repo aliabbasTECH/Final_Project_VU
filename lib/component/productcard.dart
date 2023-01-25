@@ -54,8 +54,8 @@ class _ProductCardViewState extends State<ProductCardView> {
                 textStyle: const TextStyle(fontSize: 20),
               ),
               onPressed: addmore,
-              child: const Text(
-                "show all",
+              child:  Text(
+                add==4?'show all':'show less',
                 style: TextStyle(fontSize: 12),
               ),
             ),
