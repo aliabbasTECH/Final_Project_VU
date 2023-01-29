@@ -41,8 +41,8 @@ class _OrdersAdminState extends State<OrdersAdmin> {
 
   UserdetailPage(e) {
     print(e);
-    // Navigator.push(context,
-    //     MaterialPageRoute(builder: (context) => AdminOrderDetailPage(Data: e)));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => AdminOrderDetailPage(Data: e)));
   }
 
   @override
@@ -57,15 +57,18 @@ class _OrdersAdminState extends State<OrdersAdmin> {
             onTap: () => UserdetailPage(userDatailData = {
               "Productid": data[keys[index]]["Productid"],
               "address": data[keys[index]]["address"],
-              "privousAmount:": data[keys[index]]["privousAmount:"],
+              "privousAmount": data[keys[index]]["privousAmount"],
               "deductedAmount": data[keys[index]]["deductedAmount"],
               "date": data[keys[index]]["date"],
-              "productNmae": data[keys[index]]["productNmae"],
+              "Pname": data[keys[index]]["Pname"],
               "email": data[keys[index]]["email"],
               "mobile": data[keys[index]]["mobile"],
               "price": data[keys[index]]["price"],
-              "uuid": keys[index],
-              "delivered": data[keys[index]]['delivered'],
+              "userName": data[keys[index]]["userName"],
+              "userUuid": data[keys[index]]["userUuid"],
+              "Productuuid": keys[index],
+              "delivered": data[keys[index]]['delivered'] as bool,
+              "pimage": data[keys[index]]['image'],
             }),
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 5),
@@ -82,7 +85,7 @@ class _OrdersAdminState extends State<OrdersAdmin> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                      "${data[keys[index]]['firstName']}${data[keys[index]]['lastName']}"),
+                                      "${data[keys[index]]['Pname']}"),
                                   SizedBox(
                                     height: 5,
                                   ),
@@ -92,10 +95,10 @@ class _OrdersAdminState extends State<OrdersAdmin> {
                               Spacer(),
                               Padding(
                                   padding: const EdgeInsets.all(20),
-                                  child: data[keys[index]]['Aproved'] == true
-                                      ? Text("approved",
+                                  child: data[keys[index]]['delivered'] == true
+                                      ? Text("OrderCompleted",
                                           style: TextStyle(color: Colors.green))
-                                      : Text("refused",
+                                      : Text("inprocess",
                                           style: TextStyle(color: Colors.red))),
                             ],
                           ),

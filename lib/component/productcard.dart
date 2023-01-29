@@ -44,9 +44,12 @@ class _ProductCardViewState extends State<ProductCardView> {
       children: [
         Row(
           children: [
-            Text(
-              "Products",
-              style: TextStyle(fontSize: 20),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Products",
+                style: TextStyle(fontSize: 20),
+              ),
             ),
             Spacer(),
             TextButton(

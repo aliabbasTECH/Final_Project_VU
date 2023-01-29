@@ -12,11 +12,9 @@ import 'login.dart';
 
 class HomePage extends StatefulWidget {
   final email;
-  
 
   const HomePage({
     @required this.email,
-    
   });
   @override
   State<HomePage> createState() => _HomePageState();
@@ -47,12 +45,8 @@ class _HomePageState extends State<HomePage> {
         if (widget.email == value["email"] && value['Aproved'] == true) {
           approve = value['Aproved'];
           username = "${value["firstName"]} ${value["lastName"]}";
-          camount =  value["Amount"] ?? "00000";
-          crUser = [
-            value["email"],
-            key,
-            username,
-          ];
+          camount = value["Amount"] ?? "00000";
+          crUser = [value["email"], key, username, camount];
         }
       });
     });
@@ -75,25 +69,37 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-   
+    
     return Scaffold(
         appBar: AppBar(
             centerTitle: true,
             title: approve.toString() == "true"
                 ? Text("GROCETERIA")
                 : Text(" Pending Aproval")),
-                drawer: UserDrawer(userdata:crUser),
-        body:  approve.toString() == "true"
-            ? camount == null? Center(child: CircularProgressIndicator()) : SingleChildScrollView(
-              child: Column(
-                children: [            
-                  ImageSliderDemo(),
-                 CategoriesList(),
-                pro == null? Center(child: CircularProgressIndicator()) : ProductCardView(product: pro, cUser: crUser)
-                ],
-              ),
-            )
-            : Center(child: ApprovelMsg())
-            );
+        drawer: UserDrawer(userdata: crUser),
+        body: approve.toString() == "true"
+            ? camount == null
+                ? Center(child: CircularProgressIndicator())
+                : SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        ImageSliderDemo(),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text("Categories",style: TextStyle(fontSize: 20)),
+                            ),
+                            CategoriesList(),
+                          ],
+                        ),
+                        pro == null
+                            ? Center(child: CircularProgressIndicator())
+                            : ProductCardView(product: pro, cUser: crUser)
+                      ],
+                    ),
+                  )
+            : Center(child: ApprovelMsg()));
   }
 }

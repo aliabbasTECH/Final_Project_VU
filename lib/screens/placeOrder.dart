@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 import 'home.dart';
 
@@ -19,7 +20,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
   dynamic keysdata;
   dynamic productinfo;
   int detectedAmount = 0;
-
+  var uuid;
   Future getusersdata() async {
     url =
         "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/${widget.orderData['uuid']}.json";
@@ -32,7 +33,9 @@ class _PlaceOrderState extends State<PlaceOrder> {
         productinfo = widget.orderData;
         int cra = int.parse(userdata['Amount']);
         int prd = productinfo['price'] as int;
-          detectedAmount = cra - prd;
+        detectedAmount = cra - prd;
+        uuid = Uuid().v4();
+        print(uuid);
       }
     });
   }
@@ -44,56 +47,61 @@ class _PlaceOrderState extends State<PlaceOrder> {
   }
 
   buyFunction() async {
-        
     var orderurl =
-        "https://daily-groceries-db-default-rtdb.firebaseio.com/database/products/orders.json";
+        "https://daily-groceries-db-default-rtdb.firebaseio.com/database/products/orders";
 
-      var res = await http.post(Uri.parse(orderurl),
+    var res = await http.put(Uri.parse('$orderurl/$uuid.json'),
         body: json.encode({
-          'userName':widget.orderData['uname'],
-          'email':userdata['email'],
-          'Productid':productinfo['productId'],
-          'Pname':widget.orderData['Pname'],
-          'mobile':userdata['mobile'],
-          'address':'${userdata['houseNo']} ${userdata['socity']} ${userdata['city']}',
-          'quantity':userdata['quantity'],
+          'userName': widget.orderData['uname'],
+          'email': userdata['email'],
+          'Productid': productinfo['productId'],
+          'Pname': widget.orderData['Pname'],
+          'mobile': userdata['mobile'],
+          'address':
+              '${userdata['houseNo']} ${userdata['socity']} ${userdata['city']}',
+          'quantity': userdata['quantity'],
           'price': productinfo['price'],
           'privousAmount': userdata['Amount'],
-          'deductedAmount': detectedAmount ,
-          'date' : productinfo['date'],
-          'image':widget.orderData['image'],
-          'userUuid':productinfo['uuid'],
-          'delivered':false,
+          'deductedAmount': detectedAmount,
+          'date': productinfo['date'],
+          'image': widget.orderData['image'],
+          'userUuid': productinfo['uuid'],
+          'delivered': false,
         }));
-       
-      var userurl =
-        "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/${widget.orderData['uuid']}/orders.json";
-      var respuser = await http.post(Uri.parse(userurl),
+
+    var userurl =
+        "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/${widget.orderData['uuid']}/orders";
+    var respuser = await http.put(Uri.parse('$userurl/$uuid.json'),
         body: json.encode({
-          'userName':widget.orderData['uname'],
-          'email':userdata['email'],
-          'Productid':productinfo['productId'],
-          'Pname':widget.orderData['Pname'],
-          'mobile':userdata['mobile'],
-          'address':'${userdata['houseNo']} ${userdata['socity']} ${userdata['city']}',
-          'quantity':userdata['quantity'],
+          'userName': widget.orderData['uname'],
+          'email': userdata['email'],
+          'Productid': productinfo['productId'],
+          'Pname': widget.orderData['Pname'],
+          'mobile': userdata['mobile'],
+          'address':
+              '${userdata['houseNo']} ${userdata['socity']} ${userdata['city']}',
+          'quantity': userdata['quantity'],
           'price': productinfo['price'],
           'privousAmount': userdata['Amount'],
-          'deductedAmount': detectedAmount ,
-          'date' : productinfo['date'],
-          'image':widget.orderData['image'],
-          'userUuid':productinfo['uuid'],
-          'delivered':false,
+          'deductedAmount': detectedAmount,
+          'date': productinfo['date'],
+          'image': widget.orderData['image'],
+          'userUuid': productinfo['uuid'],
+          'delivered': false,
         }));
-        var Amountupdateurl =
+    var Amountupdateurl =
         "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/${widget.orderData['uuid']}.json";
-          http.patch(Uri.parse(Amountupdateurl),
-                    body: jsonEncode({
-                      'Amount': detectedAmount.toString(),
-                    }))
-     .then(
-     await Navigator.push(context,MaterialPageRoute(builder: (context) => HomePage(email:userdata['email']),),)
-     );
+    http
+        .patch(Uri.parse(Amountupdateurl),
+            body: jsonEncode({
+              'Amount': detectedAmount.toString(),
+            }))
+        .then(await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(email: userdata['email']),
+          ),
+        ));
   }
 
   @override
@@ -164,8 +172,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                             Divider(
                               color: Colors.green,
                             ),
-                            Text(
-                                "privousAmount : ${userdata['Amount']}Rs "),
+                            Text("privousAmount : ${userdata['Amount']}Rs "),
                             Divider(
                               color: Colors.green,
                             ),
@@ -179,7 +186,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                             SizedBox(
                               height: 5,
                             ),
-                             Text("Date : ${productinfo['date']}"),
+                            Text("Date : ${productinfo['date']}"),
                             Divider(
                               color: Colors.green,
                             ),

@@ -32,7 +32,7 @@ class _ProductTableState extends State<ProductTable> {
   }
 
   Widget listatble() {
-    final columns = ["productID","name","category","tags","price","quantity","image1"];
+    final columns = ["productID","name","category","price","quantity","tags","image1"];
     final List<dynamic> datas = data;
     return DataTable(
         columns: getColumn(columns),

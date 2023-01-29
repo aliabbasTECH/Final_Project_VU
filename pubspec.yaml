@@ -36,12 +36,12 @@ dependencies:
   csv: ^5.0.1
   faker: ^2.1.0
   cupertino_icons: ^1.0.2
-  uuid: ^3.0.6
+  uuid: ^3.0.7
   http:
   file_picker: ^5.2.4
   fast_csv: ^0.1.44
   carousel_slider: ^4.2.1
-
+  pie_chart: ^5.3.2
   
 dev_dependencies:
   
@@ -72,7 +72,16 @@ flutter:
     - assets/images/welcome.png
     - assets/images/placehold.gif
     - assets/images/emptyCart.png 
-    - assets/images/drawerimg.jpg
+    - assets/images/drawerimg.jpg   
+    - assets/sliderimages/im1.jpg
+    - assets/sliderimages/im2.jpg
+    - assets/sliderimages/im3.jpg
+    - assets/sliderimages/im4.jpg
+    - assets/catimg/bread.png
+    - assets/catimg/dairy.png
+    - assets/catimg/drinks.png
+    - assets/catimg/frozen.png
+    - assets/catimg/produce.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -3,28 +3,26 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import 'categoriesproducts.dart';
+
 class CategoriesList extends StatefulWidget {
-  const CategoriesList({super.key});
+  final product;
+  final cUser;
+  const CategoriesList({this.product, this.cUser});
 
   @override
   State<CategoriesList> createState() => _CategoriesListState();
 }
 
- 
- 
-
-
 class _CategoriesListState extends State<CategoriesList> {
-dynamic crUser;
-  // dynamic approve;
-  // dynamic username;
-  // dynamic camount;
-  // Map<String, dynamic> products = {};
+  dynamic crUser;
+dynamic category;
   var pro;
+  List catvoislist = [];
   @override
   void initState() {
     super.initState();
-    this.getProducts();
+    // this.getProducts();
   }
 
   var productUrl =
@@ -35,41 +33,121 @@ dynamic crUser;
     setState(() {
       dynamic resp = jsonDecode(response.body);
       pro = resp;
-      resp.asMap().forEach((index, element) {
-        print(pro[index]['category']);
+      pro.asMap().forEach((index, element) {
+        var list = pro[index];
+        if (list['category'] == 'BAKERY') {
+          catvoislist.add(list);
+        }
       });
-      
+      print(catvoislist.length);
     });
   }
 
-  
+  toCategorize(e) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => categoriesproduct(
+                product: widget.product, cUser: crUser, category: e)));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      
+      padding: EdgeInsets.all(10),
       height: 100.0,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: <Widget>[
-          Container(
-            width: 100,
-            color: Colors.red,
+          InkWell(
+            onTap:() => toCategorize(category = "BAKERY"),
+            child: Container(
+              width: 100,
+              child: Card(
+                elevation: 8,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: Image.asset("assets/catimg/bread.png")),
+                      Text("BEAKRY"),
+                    ]),
+              ),
+            ),
           ),
-          Container(
-            width: 100,
-            color: Colors.blue,
+          InkWell(
+             onTap:() => toCategorize(category = "DAIRY"),
+            child: Container(
+              width: 100,
+              child: Card(
+                elevation: 8,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: Image.asset("assets/catimg/dairy.png")),
+                      Text("DAIRY"),
+                    ]),
+              ),
+            ),
           ),
-          Container(
-            width: 100,
-            color: Colors.green,
+          InkWell(
+            onTap:() => toCategorize(category = "BEVERAGES"),
+            child: Container(
+              width: 100,
+              child: Card(
+                elevation: 8,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: Image.asset("assets/catimg/drinks.png")),
+                      Text("BEVERAGE"),
+                    ]),
+              ),
+            ),
           ),
-          Container(
-            width: 100,
-            color: Colors.yellow,
+          InkWell(
+            onTap:() => toCategorize(category = "Frozen Foods"),
+            child: Container(
+              width: 100,
+              child: Card(
+                elevation: 8,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: Image.asset("assets/catimg/frozen.png")),
+                      Text("FROZEN"),
+                    ]),
+              ),
+            ),
           ),
-          Container(
-            width: 100,
-            color: Colors.orange,
+          InkWell(
+            onTap:() => toCategorize(category = "PRODUCE"),
+            child: Container(
+              width: 100,
+              child: Card(
+                elevation: 8,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: Image.asset("assets/catimg/produce.png")),
+                      Text("PRODUCE"),
+                    ]),
+              ),
+            ),
           ),
         ],
       ),

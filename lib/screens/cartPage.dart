@@ -43,8 +43,9 @@ class _CartPageState extends State<CartPage> {
 
       if (resp.statusCode == 200) {
         print('Key deleted successfully');
-        getusersdata();
         cartproducts = null;
+        getusersdata();
+        
       } else {
         print('Error deleting key: ${resp.statusCode}');
       }

@@ -3,6 +3,7 @@ import 'package:daily_groceries/screens/admin/admindash.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
+import '../component/waitforApprove.dart';
 import 'home.dart';
 import 'register.dart';
 
@@ -46,10 +47,16 @@ class _LoginScreenState extends State<LoginScreen> {
         await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => HomePage(
-              email: value["email"]
-              
-            ),
+            builder: (context) => HomePage(email: value["email"]),
+          ),
+        );
+      } else if (_email.text == value["email"] &&
+          _pin.text == value["pin"].toString() &&
+          value['Aproved'] == false) {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ApprovelMsg(),
           ),
         );
       } else {
@@ -79,7 +86,6 @@ class _LoginScreenState extends State<LoginScreen> {
           'Login',
         ),
         actions: [],
-        
         elevation: 2,
       ),
       backgroundColor: Colors.white,
@@ -103,7 +109,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: Colors.green,
                         width: 1,
                       ),
-                      
                     ),
                     filled: true,
                     fillColor: Color(0xFFF6F6F6),
@@ -130,7 +135,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: Colors.green,
                         width: 1,
                       ),
-                      
                     ),
                     filled: true,
                     fillColor: Color(0xFFF6F6F6),
@@ -147,43 +151,39 @@ class _LoginScreenState extends State<LoginScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                Padding(
-                  padding: const EdgeInsets.all(2),
-                  child: SizedBox(
-                  width: 150,
-                   height: 50,
-                    child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
+                  Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: SizedBox(
+                      width: 150,
+                      height: 50,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(),
+                        onPressed: login,
+                        child: Text("Login", style: TextStyle(fontSize: 18)),
+                      ),
                     ),
-                    onPressed: login,
-                    child: Text("Login" ,style: TextStyle(fontSize: 18)),
-              ),
                   ),
-                ),
-               Padding(
-                 padding: const EdgeInsets.all(2),
-                 child: SizedBox(
-                  width: 150,
-                  height: 50,
-                   child: ElevatedButton(
-                   style: ElevatedButton.styleFrom(
-                    
-                       ),
-                          onPressed: () async {
-                            await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Register(),
-                              ),
-                            );
-                          }, child: Text("Register" ,style: TextStyle(fontSize: 18)),                  
-              ),
-                 ),
-               ),
-              ],)
-              
-              
-                   
+                  Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: SizedBox(
+                      width: 150,
+                      height: 50,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(),
+                        onPressed: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Register(),
+                            ),
+                          );
+                        },
+                        child: Text("Register", style: TextStyle(fontSize: 18)),
+                      ),
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
         ),

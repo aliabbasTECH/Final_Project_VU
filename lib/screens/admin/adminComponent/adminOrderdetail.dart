@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -19,10 +18,8 @@ class AdminOrderDetailPage extends StatefulWidget {
 
 class _AdminOrderDetailPageState extends State<AdminOrderDetailPage> {
   TextEditingController _textFieldController = TextEditingController();
-  dynamic userData;
-  dynamic amount;
-  dynamic valueText;
-  dynamic usercarts;
+  dynamic orderData;
+
   @override
   void initState() {
     super.initState();
@@ -30,118 +27,73 @@ class _AdminOrderDetailPageState extends State<AdminOrderDetailPage> {
   }
 
   Future getusers() async {
-    final response = await http.get(Uri.parse(
-        "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/${widget.Data['uuid']}.json"));
     setState(() {
-      dynamic res = jsonDecode(response.body);
-      amount = res['Amount'];
-      userData = res;
-      usercarts = res['data'];
-      print(usercarts);
+      orderData = widget.Data;
     });
   }
 
-  approve(e) async {
-    setState(() async {
-      var appr = await http.get(Uri.parse(
-          "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/$e/Aproved.json"));
-      if (appr != true) {
-        http.patch(
-            Uri.parse(
-                "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/$e.json"),
-            body: jsonEncode({
-              'Aproved': true,
-            }));
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => OrdersAdmin()));
-      }
-    });
+  // orderComplete(e) async {
+  //    print(e);
+  //   var appr = await http.get(Uri.parse(
+  //       "https://daily-groceries-db-default-rtdb.firebaseio.com/database/products/orders/$e/delivered.json"));
+  //   if(appr.body != true ){
+  //     http.patch(
+  //           Uri.parse(
+  //               "https://daily-groceries-db-default-rtdb.firebaseio.com/database/products/orders/$e.json"),
+  //           body: jsonEncode({
+  //             'delivered': true,
+  //           }));
+  //   }
+  // }
+
+  Ordercomplete(e, u) async {
+    print("$e:$u");
+    var appr = await http.get(Uri.parse(
+        "https://daily-groceries-db-default-rtdb.firebaseio.com/database/products/orders/$e/delivered.json"));
+    if (appr.body != true) {
+      http.patch(
+          Uri.parse(
+              "https://daily-groceries-db-default-rtdb.firebaseio.com/database/products/orders/$e.json"),
+          body: jsonEncode({
+            'delivered': true,
+          }));
+      http
+          .patch(
+              Uri.parse(
+                  "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/$u/orders/$e.json"),
+              body: jsonEncode({
+                'delivered': true,
+              }))
+          .then(await Navigator.push(
+              context, MaterialPageRoute(builder: (context) => OrdersAdmin())));
+    }
   }
 
-  disapprove(e) async {
+  deleteOrder(e, u) async {
     setState(() async {
-      var appr = await http.get(Uri.parse(
-          "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/$e/Aproved.json"));
-      if (appr != false) {
-        http.patch(
-            Uri.parse(
-                "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/$e.json"),
-            body: jsonEncode({
-              'Aproved': false,
-            }));
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => OrdersAdmin()));
-      }
-    });
-  }
+      final orderresp = await http.delete(Uri.parse(
+          "https://daily-groceries-db-default-rtdb.firebaseio.com/database/products/orders/$e.json"));
+      final userorderresp = await http.delete(Uri.parse(
+          "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/$u/orders/$e.json"));
 
-  deleteUser(e) async {
-    setState(() async {
-      final resp = await http.delete(Uri.parse(
-          "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/$e.json"));
-
-      if (resp.statusCode == 200) {
+      if (orderresp.statusCode == 200 || userorderresp.statusCode == 200) {
         print('Key deleted successfully');
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => OrdersAdmin()));
       } else {
-        print('Error deleting key: ${resp.statusCode}');
+        print(
+            'Error deleting key: ${orderresp.statusCode}:${userorderresp.statusCode}');
       }
     });
-  }
-
-  Future<void> _displayTextInputDialog(BuildContext context) async {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('TextField in Dialog'),
-            content: TextField(
-              keyboardType: TextInputType.number,
-              onChanged: (v) {
-                setState(() {
-                  valueText = v;
-                });
-              },
-              controller: _textFieldController,
-              decoration: InputDecoration(hintText: "Text Field in Dialog"),
-            ),
-            actions: <Widget>[
-              ElevatedButton(
-                child: Text('CANCEL'),
-                onPressed: () {
-                  setState(() {
-                    Navigator.pop(context);
-                  });
-                },
-              ),
-              ElevatedButton(
-                child: Text('OK'),
-                onPressed: () {
-                  setState(() async {
-                    var url =
-                        "https://daily-groceries-db-default-rtdb.firebaseio.com/database/users/${widget.Data['uuid']}.json";
-                    http.patch(Uri.parse(url),
-                        body: jsonEncode({
-                          'Amount': valueText,
-                        }));
-                    await getusers();
-                    Navigator.pop(context);
-                  });
-                },
-              ),
-            ],
-          );
-        });
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(title: Text("User detail")),
+        appBar: AppBar(title: Text("Order detail")),
         drawer: AdDrawer(),
-        body: userData == null
+        body: orderData == null
             ? Center(child: CircularProgressIndicator())
             : Container(
                 padding: EdgeInsets.all(20),
@@ -152,16 +104,15 @@ class _AdminOrderDetailPageState extends State<AdminOrderDetailPage> {
                         width: double.infinity,
                         child: Column(
                           children: [
-                            CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                  'https://toppng.com/uploads/preview/roger-berry-avatar-placeholder-11562991561rbrfzlng6h.png'),
-                              radius: 50,
+                            SizedBox(
+                              height: 150,
+                              child: Image.network("${orderData['pimage']}"),
                             ),
                             SizedBox(
                               height: 10,
                             ),
                             Text(
-                              "${userData['firstName']}${userData['lastName']} ",
+                              "${orderData['Pname']} ",
                               style: TextStyle(fontSize: 25),
                             ),
                           ],
@@ -175,78 +126,84 @@ class _AdminOrderDetailPageState extends State<AdminOrderDetailPage> {
                             SizedBox(
                               height: 20,
                             ),
-                            Column(
-                              children: [
-                                Text(
-                                    "Current Amount : ${amount == null ? "00000" : amount} ",
-                                    style: TextStyle(fontSize: 18)),
-                                Row(
-                                  children: [
-                                    Spacer(),
-                                    ElevatedButton(
-                                        onPressed: () =>
-                                            _displayTextInputDialog(context),
-                                        child: Text("add")),
-                                  ],
-                                )
-                              ],
-                            ),
                             SizedBox(
                               height: 20,
                             ),
                             Text(
-                              "AdminOrderDetailPage",
-                              style: TextStyle(fontSize: 18),
+                              "OrderDetail",
+                              style: TextStyle(fontSize: 17),
                             ),
                             Divider(
                               color: Colors.green,
                             ),
-                            Text("Email : ${userData['email']}"),
+                            Text("privousAmount : ${orderData['Productid']}"),
                             Divider(
                               color: Colors.green,
                             ),
-                            Text("mobile : ${userData['mobile']}"),
-                            Divider(
-                              color: Colors.green,
-                            ),
-                            Text("city : ${userData['city']}"),
+                            Text("price: : ${orderData['price']}"),
                             Divider(
                               color: Colors.green,
                             ),
                             Text(
-                                "Address : ${userData['houseNo']} ${userData['socity']} ${userData['city']}"),
+                                "privousAmount : ${orderData['privousAmount']}"),
                             Divider(
                               color: Colors.green,
                             ),
-                            Text("Approve : ${userData['Aproved']}"),
+                            Text(
+                                "deductedAmount : ${orderData['deductedAmount']}"),
+                            Divider(
+                              color: Colors.green,
+                            ),
+                            Text("userName : ${orderData['userName']}"),
+                            Divider(
+                              color: Colors.green,
+                            ),
+                            Text("Email : ${orderData['email']}"),
+                            Divider(
+                              color: Colors.green,
+                            ),
+                            Text("mobile : ${orderData['mobile']}"),
+                            Divider(
+                              color: Colors.green,
+                            ),
+                            Text("city : ${orderData['city']}"),
+                            Divider(
+                              color: Colors.green,
+                            ),
+                            Text("Address : ${orderData['address']}"),
+                            Divider(
+                              color: Colors.green,
+                            ),
+                            Text("Approve : ${orderData['delivered']}"),
                           ],
                         ),
                       ),
-                     
+
                       // productsbyUser();
-                      
+
                       Container(
                         child: Padding(
                             padding: EdgeInsets.symmetric(
                                 horizontal: 20, vertical: 30),
-                            child: Row(
-                              children: [
-                                ElevatedButton(
-                                    onPressed: () =>
-                                        deleteUser(widget.Data['uuid']),
-                                    child: Text("Delete")),
-                                Spacer(),
-                                userData['Aproved'] == false
-                                    ? ElevatedButton(
-                                        onPressed: () =>
-                                            approve(widget.Data['uuid']),
-                                        child: Text("Approve"))
-                                    : ElevatedButton(
-                                        onPressed: () =>
-                                            disapprove(widget.Data['uuid']),
-                                        child: Text("refused")),
-                              ],
-                            )),
+                            child: orderData['delivered'] != false
+                                ? Container(
+                                    child: Text("Order is Completed"),
+                                  )
+                                : Row(
+                                    children: [
+                                      ElevatedButton(
+                                          onPressed: () => deleteOrder(
+                                              widget.Data['Productuuid'],
+                                              widget.Data['userUuid']),
+                                          child: Text("CancelOrder")),
+                                      Spacer(),
+                                      ElevatedButton(
+                                          onPressed: () => Ordercomplete(
+                                              widget.Data['Productuuid'],
+                                              widget.Data['userUuid']),
+                                          child: Text("Complete the order")),
+                                    ],
+                                  )),
                       )
                     ],
                   ),

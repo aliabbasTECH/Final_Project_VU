@@ -37,14 +37,14 @@ class _UserDrawerState extends State<UserDrawer> {
                      )),
             child:Container(
               padding: const EdgeInsets.only(top: 80),
-              child: Text("GROCETERIA",style: TextStyle(fontSize: 45, color: Colors.white),),),
+              child: const Text("GROCETERIA",style: TextStyle(fontSize: 45, color: Colors.white),),),
             
           ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     width: 50,
                     height: 50,
                     child: CircleAvatar(
@@ -55,19 +55,48 @@ class _UserDrawerState extends State<UserDrawer> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                          children: [
-                            Text('${widget.userdata[2]}',style: TextStyle(fontSize: 25),),
-                            Text('${widget.userdata[0]}',style: TextStyle(fontSize: 13)),
-                          ],
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right:15),
+                          child: Column(
+                                children: [
+                                  Text('${widget.userdata[2]}',style: const TextStyle(fontSize: 25),),
+                                  Text('${widget.userdata[0]}',style: const TextStyle(fontSize: 13)),
+                                ],
+                              ),
                         ),
+                            Container(
+                              decoration: BoxDecoration(
+             gradient:const LinearGradient(
+                  colors: [
+                    Colors.greenAccent, 
+                    Colors.green,
+                    Colors.teal,
+                    Colors.tealAccent
+                    //add more colors for gradient
+                   ],
+                  begin: Alignment.topLeft, //begin of the gradient color
+                  end: Alignment.bottomRight, //end of the gradient color
+                  stops: [0, 0.2, 0.5, 0.8] //stops for individual color
+                  //set the stops number equal to numbers of color
+             ),
+
+             borderRadius: BorderRadius.circular(30), //border corner radius
+             
+          ),
+                             
+                              padding: const EdgeInsets.all(15),
+                              child: Text( '${widget.userdata[3] ?? "00000"} Rs' ,style: TextStyle(fontSize:18),),)
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
         
           ListTile(
-            leading: Icon(Icons.home),
+            leading: const Icon(Icons.home),
             title: const Text('Home'),
             onTap: () {
               Navigator.push(
@@ -80,7 +109,7 @@ class _UserDrawerState extends State<UserDrawer> {
             },
           ),
           ListTile(
-            leading: Icon(Icons.shopping_cart),
+            leading: const Icon(Icons.shopping_cart),
             title: const Text('Cart'),
             onTap: () {
               Navigator.push(
@@ -93,7 +122,7 @@ class _UserDrawerState extends State<UserDrawer> {
             },
           ),
           ListTile(
-            leading: Icon(Icons.production_quantity_limits),
+            leading: const Icon(Icons.production_quantity_limits),
             title: const Text('products'),
             onTap: () {
               Navigator.push(
@@ -106,7 +135,7 @@ class _UserDrawerState extends State<UserDrawer> {
             },
           ),
           ListTile(
-            leading: Icon(Icons.person),
+            leading: const Icon(Icons.person),
             title: const Text('Profile'),
             onTap: () {
               Navigator.push(
@@ -116,7 +145,7 @@ class _UserDrawerState extends State<UserDrawer> {
             },
           ),
           ListTile(
-            leading: Icon(Icons.logout),
+            leading: const Icon(Icons.logout),
             title: const Text('Lougout'),
             onTap: () {
               Navigator.push(

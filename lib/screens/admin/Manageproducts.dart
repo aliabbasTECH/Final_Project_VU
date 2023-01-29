@@ -106,25 +106,40 @@ class _ManageProductsState extends State<ManageProducts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("Manage Products")),
-        drawer: AdDrawer(),
+        appBar: AppBar(title: const Text("Manage Products")),
+        drawer: const AdDrawer(),
         body: ListView(children: [
           Container(
-            child: Row(
+            child: Column(
               children: [
-                Text("Upload CSV(comma,delimited) "),
-                Spacer(),
-                ElevatedButton.icon(
-                  onPressed: selectCSVFile,
-                  icon: Icon(Icons.save), //icon data for elevated button
-                  label: Text("Upload CSV"), //label text
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      const Text("Upload CSV"),
+                      const Spacer(),
+                      ElevatedButton.icon(
+                        onPressed: selectCSVFile,
+                        icon: const Icon(
+                            Icons.save), //icon data for elevated button
+                        label: const Text("Upload CSV"), //label text
+                      )
+                    ],
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    "Product Table",
+                    style: TextStyle(fontSize: 25),
+                  ),
                 )
               ],
             ),
           ),
           Container(
             child: data == null
-                ? Center(child: CircularProgressIndicator())
+                ? const Center(child: CircularProgressIndicator())
                 : SingleChildScrollView(
                     scrollDirection: Axis.horizontal, child: listatble()),
           )
